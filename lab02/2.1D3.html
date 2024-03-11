@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Data Visualization"/>
+    <meta name="keywords" content="HTML,CSS,D3"/>
+    <meta name="author" content="Feliks Ezra Ananda"/>
+
+    <title>Task 2.1 D3 Data Binding</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!--Create the class to make the text red-->
+
+</head>
+<body>
+<h1>Creating and formatting Paragraph Elements with D3</h1>
+
+<script>
+    //Add new data values
+    var dataset=[14,5,26,23,9];
+
+    d3.select("body").selectAll("p")
+    .data(dataset)
+    .enter()
+    .append("p")
+    .text(function(d){
+      //Using if else condition to check the data value is greater than 10 or not
+      if (d>10)
+            //If the data is more than 10 then return below statement
+            return "Warning:Joe watched " + d + " cat videos today.";
+        else //If not then return below statement
+        return "Joe watched " + d + " cat videos today.";
+    })
+    .style("color", function(d){
+        //If else function to make the text red only if data more than 10
+        if (d>10){
+            return "red";
+        }else{
+            return "black";
+        }
+    });
+
+</script>
+</body>
+<br>
+
+<footer style="color: grey;">COS30045 Data Visualization
+<br>
+Feliks Ezra Ananda</footer>
+

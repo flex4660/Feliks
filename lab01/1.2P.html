@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Data Visualization Exercise 1"/>
+    <meta name="keywords" content="HTML,CSS"/>
+    <meta name="author" content="Feliks Ezra Ananda"/>
+    <title> Task 1.1 HTML and CSS Demo Page</title>
+    <!--Using link  tag to include external style sheet and bootstrap from W3schools-->
+    <link rel="stylesheet" href="Basic.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+    <h1>Title of Article about Interesting Visualization</h1>
+    <h2>Author of Interesting Article</h2>
+
+    <p>A report from <b>Animal Medicines Australia (AMA)</b> has found that many Australians took the opportunity to introduce a pet into their household during the pandemic. Their survey indicated that there was a <i>significant increase </i>in the percent of households taking in a new dog, fish or bird. Their research also indicated that pets had a number of positive influences on their lives such as:</p>
+    <ul>
+        <li>companionship</li>
+        <li>better mental health</li>
+        <li>joy and happiness</li>
+    </ul>
+    <!--Using bootstrap to create the buttons-->
+    <!---Using id  attribute for the image so that I can call  it in JavaScript -->
+    <div class="btn-group">
+        <button id="Pet2019" type="button" class="btn btn-primary" onclick="showImage('Pet2019')">2019</button>
+        <button id="Pet2021" type="button" class="btn btn-primary" onclick="showImage('Pet2021')">2021</button>
+        <button id="Petboth" type="button" class="btn btn-primary" onclick="showImage('Petboth')">Both</button>
+    </div>
+
+    <br><br/>
+<!--Image and figure id to  be called by JavaScript function-->
+    <img id="imageToShow" src="" alt="Pet Ownership" style="display: none;">
+    <figure id="imageCaption" style="display: none;">
+        <figcaption></figcaption>
+    </figure>
+    <br><br/>
+    <p>With the increase in pet ownership the AMA are encouraging policy makers to consider the needs of companion animals and their owners when considering rental, strata and body corporate regulations as well as accepting animals in public places and transport.</p>
+
+    <footer>COS30045 Data Visualization</footer>
+<!--Javascript function to display an image when clicking on list item-->
+<!--Using if else condition so that the button can
+//Get the image and the caption based on their image and figure id's-->
+    <script>
+
+        function showImage(imageId) {
+            //Create new variables that used it to call the image and caption id's
+            var imageElement = document.getElementById('imageToShow');
+            var captionElement = document.getElementById('imageCaption');
+            var figCaptionElement = captionElement.getElementsByTagName('figcaption')[0];
+            //Call the image and caption which designated id attributes
+            if (imageId === 'Pet2019') {
+                //Using file path for the image to display
+                imageElement.src = 'COS30045 1.1 Resources/Pets2019.png';
+                figCaptionElement.textContent = 'Fig 1. Pets Ownership in 2019';
+            } else if (imageId === 'Pet2021') {
+                imageElement.src = 'COS30045 1.1 Resources/Pets2021.png';
+                figCaptionElement.textContent = 'Fig 2. Pets Ownership in 2021';
+            } else if (imageId === 'Petboth') {
+                imageElement.src = 'COS30045 1.1 Resources/Pets2019vs2021.png';
+                figCaptionElement.textContent = 'Fig 3. Comparison of Pet Ownership in 2019 and 2021';
+            }
+            //Displaying the image and caption together
+            //After (the button is clicked ) getting its information from above conditions
+            imageElement.style.display = 'block';
+            captionElement.style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+/* Basic.css */
+/* Styles for buttons */
+button.btn-group{
+    margin: auto;
+
+}
+/*Image CSS make it flexible*/
+img{
+    height: 500px;
+    width: 700px;
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom:auto;
+    margin-right: auto;
+}
+/*Styles for title*/
+h1{
+    font-family:fantasy;
+    word-spacing: normal;
+    background-color: antiquewhite;
+    width: 200px;
+    height: 200px;
+    transition: width 3s;
+
+}
+/*Hovering animation for the title*/
+h1:hover{
+    width: 100%;
+}
+
+h2{
+    font-family:'Times New Roman', Times, serif;
+    word-spacing: normal;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+ul{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+
+}
+li{
+    block-size: auto;
+}
+footer{
+    position:absolute;
+    font-family:'Courier New', Courier, monospace
+
+}
+
