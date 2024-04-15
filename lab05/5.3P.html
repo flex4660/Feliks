@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Data Visualization"/>
+    <meta name="keywords" content="HTML,CSS,D3"/>
+    <meta name="author" content="Feliks Ezra Ananda"/>
+
+    <title>LAB 5.3 D3 Adding and Removing Data</title>
+    <!--Include the D3 Library v7-->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 20px;
+            text-align: left;
+            margin-left: 20px;
+        }
+        #addButton, #removeButton {
+            background-color: cadetblue;
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            /* Make the bar chart to the left */
+            margin-left: 20px;
+        }
+        #addButton {
+            background-color: forestgreen;
+        }
+        #removeButton {
+            background-color: tomato;
+        }
+        #chart {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-left: 20px;
+        }
+        footer {
+            color: grey;
+            margin-top: 20px;
+            text-align: left;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="buttonContainer">
+    <h1>Adding and Removing Values</h1>
+    <button id="addButton">Add</button>
+    <button id="removeButton">Remove</button>
+</div>
+<svg id="chart"></svg>
+<script>
+    var w = 600;
+    var h = 250;
+    var dataset = [14, 5, 26, 23, 9, 21, 7, 19, 20, 25, 22, 18, 15, 13, 15, 9, 11, 10];
+    // Set the Maximum value for random data generation
+    var maxValue = 25;
+
+    // Create SVG element for the bar chart
+    var svg = d3.select("#chart")
+                .attr("width", w)
+                .attr("height", h);
+
+    // Define xScale using scaleBand()
+    var xScale = d3.scaleBand()
+                .domain(d3.range(dataset.length))
+                .range([0, w])
+                //Spacing between bars
+                .paddingInner(0.05);
+
+    // Define yScale using scaleLinear()
+    var yScale = d3.scaleLinear()
+                .domain([0, d3.max(dataset)])
+                .range([h, 0]);
+
+    // Function to update the chart
+    function updateChart() {
+        // Update bars with new data
+        var bars = svg.selectAll("rect")
+            .data(dataset);
+
+        // Update existing bars
+        bars.transition()
+            .duration(1000)
+            .attr("x", function(d, i) {
+                return xScale(i);
+            })
+            .attr("y", function(d) {
+                return yScale(d);
+            })
+            .attr("width", xScale.bandwidth())
+            .attr("height", function(d) {
+                return h - yScale(d);
+            })
+            .attr("fill", function(d) {
+                return "rgb(0, 0, " + Math.round(d * 10) + ")";
+            });
+
+        // Add new bars
+        bars.enter().append("rect")
+        // Set initial x position outside of the chart
+            .attr("x", w)
+            .attr("y", function(d) {
+                // Set initial y position at the bottom
+                return yScale(0);
+            })
+            .attr("width", xScale.bandwidth())
+             // Set initial height to 0 for smooth transition
+            .attr("height", 0)
+            .merge(bars)
+            .transition()
+            .duration(1000)
+            .attr("x", function(d, i) {
+                return xScale(i);
+            })
+            .attr("y", function(d) {
+                return yScale(d);
+            })
+            .attr("width", xScale.bandwidth())
+            .attr("height", function(d) {
+                return h - yScale(d);
+            })
+            .attr("fill", function(d) {
+                return "rgb(0, 0, " + Math.round(d * 10) + ")";
+            });
+
+        // Remove bars using .exit
+        bars.exit()
+            .transition()
+            .duration(1000)
+            .attr("x", w)
+            .attr("height", 0)
+            .remove();
+
+        // Update text
+        var text = svg.selectAll("text")
+            .data(dataset);
+
+        // Update existing text
+        text.transition()
+            .duration(1000)
+            .attr("x", function(d, i) {
+                return xScale(i) + xScale.bandwidth() / 2;
+            })
+            .attr("y", function(d) {
+                return yScale(d) + 14;
+            })
+            .text(function(d) {
+                return d;
+            });
+
+        // Add new text
+        text.enter().append("text")
+            .attr("x", function(d, i) {
+                return xScale(i) + xScale.bandwidth() / 2;
+            })
+            .attr("y", function(d) {
+                return yScale(d) + 14;
+            })
+            .attr("text-anchor", "middle")
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "12px")
+            .attr("fill", "white")
+            .text(function(d) {
+                return d;
+            });
+
+        // Remove text when the button Remove is clicked
+        text.exit().remove();
+    }
+
+    // Update in the chart
+    updateChart();
+
+    // Add event listener to add button
+    d3.select("#addButton")
+        .on("click", function() {
+            // Generate new random data point
+            var newData = Math.floor(Math.random() * maxValue);
+            // Add new data point to the dataset
+            dataset.push(newData);
+            xScale.domain(d3.range(dataset.length));
+            updateChart();
+        });
+
+    // Add event listener to remove button
+    d3.select("#removeButton")
+        .on("click", function() {
+            // Remove the last element in the array
+            dataset.pop();
+            xScale.domain(d3.range(dataset.length));
+            updateChart();
+        });
+
+    d3.select("body").append("footer")
+        .html("COS30045 Data Visualization<br>Feliks Ezra Ananda");
+</script>
+</body>
+</html>

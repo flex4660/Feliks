@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Data Visualization"/>
+    <meta name="keywords" content="HTML,CSS,D3"/>
+    <meta name="author" content="Feliks Ezra Ananda"/>
+    <title>LAB 6.1 D3 Interactivity - Mouse Over Effects</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 20px;
+            text-align: left;
+            margin-left: 20px;
+        }
+        #addButton, #removeButton {
+            background-color: cadetblue;
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-left: 20px;
+        }
+        #addButton {
+            background-color:cadetblue;
+        }
+        #removeButton {
+            background-color:darkorange;
+        }
+        #chart {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-left: 20px;
+        }
+        footer {
+            color: grey;
+            margin-top: 20px;
+            text-align: left;
+            margin-left: 20px;
+        }
+        .bar-text {
+            fill: white;
+            font-size: 12px;
+            font-family: sans-serif;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+<div id="buttonContainer">
+    <h1>Bar Chart with Mouse Over</h1>
+    <!-- Add mouseover event to the Add button -->
+    <button id="addButton">Add</button>
+    <button id="removeButton">Remove</button>
+</div>
+<svg id="chart"></svg>
+<script>
+    var w = 600;
+    var h = 250;
+    var dataset = [14, 5, 26, 23, 9, 21, 7, 19, 20, 25, 22, 18, 15, 13, 15, 9, 11, 10];
+    var maxValue = 25;
+
+    var svg = d3.select("#chart")
+                .attr("width", w)
+                .attr("height", h);
+
+    var xScale = d3.scaleBand()
+                   .domain(d3.range(dataset.length))
+                   .range([0, w])
+                   .paddingInner(0.05);
+
+    var yScale = d3.scaleLinear()
+                   .domain([0, d3.max(dataset)])
+                   .range([h, 0]);
+
+    function updateChart() {
+        // Update the xScale domain with the new length of dataset
+        xScale.domain(d3.range(dataset.length));
+
+        var bars = svg.selectAll("rect")
+                      .data(dataset);
+
+        // Enter new bars
+        bars.enter()
+            .append("rect")
+            .attr("x", w)
+            .merge(bars)
+            .transition()
+            .duration(500)
+            .attr("x", function(d, i) { return xScale(i); })
+            .attr("y", function(d) { return yScale(d); })
+            .attr("width", xScale.bandwidth())
+            .attr("height", function(d) { return h - yScale(d); })
+            .attr("fill", "grey");
+
+        // Remove bars as needed
+        bars.exit()
+            .transition()
+            .duration(500)
+            .attr("x", w)
+            .remove();
+
+        // Select and update all data-driven text elements
+        var labels = svg.selectAll(".bar-text")
+                        .data(dataset);
+
+        // Enter new labels
+        labels.enter()
+              .append("text")
+              .attr("class", "bar-text")
+              .attr("x", w)
+              .attr("text-anchor", "middle")
+              .merge(labels)
+              .transition()
+              .duration(500)
+              .attr("x", function(d, i) { return xScale(i) + xScale.bandwidth() / 2; })
+              .attr("y", function(d) { return yScale(d) + 14; })
+              .text(function(d) { return d; });
+
+        // Remove labels as needed
+        labels.exit()
+              .transition()
+              .duration(500)
+              .attr("x", w)
+              .remove();
+
+        // Add mouseover event to the new bars
+        svg.selectAll("rect")
+           .on("mouseover", function(event, d) {
+               d3.select(this).attr('fill', 'orange');
+               var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.bandwidth() / 2;
+               var yPosition = parseFloat(d3.select(this).attr("y")) + 14;
+               svg.append("text")
+                  .attr('x', xPosition)
+                  .attr('y', yPosition)
+                  .attr('class', 'bar-text')
+                  .attr("text-anchor", "middle")
+                  .text(d);
+           })
+           .on("mouseout", function() {
+               d3.select(this).attr('fill', "grey");
+               svg.selectAll(".bar-text").remove();
+           });
+    }
+
+    // Initial chart update
+    updateChart();
+
+    d3.select("#addButton")
+      .on("click", function() {
+          // Add new data and update chart
+          var newNumber = Math.floor(Math.random() * maxValue);
+          dataset.push(newNumber);
+          updateChart();
+      });
+
+    d3.select("#removeButton")
+      .on("click", function() {
+          // Remove last data and update chart
+          dataset.pop();
+          updateChart();
+      });
+</script>
+<footer>
+    COS30045 Data Visualization<br>Feliks Ezra Ananda
+</footer>
+</body>
+</html>
